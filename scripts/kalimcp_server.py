@@ -26,6 +26,7 @@ import json, os, socket, subprocess, sys, threading, shutil, tempfile
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from datetime import datetime
 import argparse, signal, re
+from shlex import quote as q
 
 VERSION = "1.0"
 DOCKER_MODE = False
@@ -59,18 +60,18 @@ def run_cmd(cmd, timeout=120):
 def nmap_scan(target, scan_type="default", ports=None, scripts=None):
     """Nmap scan with multiple profiles"""
     profiles = {
-        "quick": f"nmap -T4 -F {target}",
-        "default": f"nmap -sV -sC -T4 {target}",
-        "full": f"nmap -sV -sC -p- -T4 {target}",
-        "udp": f"nmap -sU --top-ports 50 -T4 {target}",
-        "stealth": f"nmap -sS -T2 -f {target}",
-        "vuln": f"nmap -sV --script=vuln -T4 {target}",
-        "os": f"nmap -O -sV -T4 {target}",
-        "aggressive": f"nmap -A -T4 {target}"
+        "quick": f"nmap -T4 -F {q(target)}",
+        "default": f"nmap -sV -sC -T4 {q(target)}",
+        "full": f"nmap -sV -sC -p- -T4 {q(target)}",
+        "udp": f"nmap -sU --top-ports 50 -T4 {q(target)}",
+        "stealth": f"nmap -sS -T2 -f {q(target)}",
+        "vuln": f"nmap -sV --script=vuln -T4 {q(target)}",
+        "os": f"nmap -O -sV -T4 {q(target)}",
+        "aggressive": f"nmap -A -T4 {q(target)}"
     }
     cmd = profiles.get(scan_type, profiles["default"])
-    if ports: cmd += f" -p {ports}"
-    if scripts: cmd += f" --script={scripts}"
+    if ports: cmd += f" -p {q(str(ports))}"
+    if scripts: cmd += f" --script={q(scripts)}"
     result = run_cmd(cmd, timeout=300)
     result["scan_type"] = scan_type
     result["target"] = target
@@ -81,59 +82,59 @@ def nmap_scan(target, scan_type="default", ports=None, scripts=None):
 
 def masscan_scan(target, ports="1-65535", rate=1000):
     """Masscan — fast port scanning"""
-    cmd = f"masscan {target} -p{ports} --rate={rate} --open-only"
+    cmd = f"masscan {q(target)} -p{q(str(ports))} --rate={q(str(rate))} --open-only"
     return run_cmd(cmd, timeout=180)
 
 def dns_enum(domain, tool="dnsenum"):
     """DNS enumeration"""
     cmds = {
-        "dnsenum": f"dnsenum --noreverse {domain}",
-        "dnsrecon": f"dnsrecon -d {domain}",
-        "fierce": f"fierce --domain {domain}"
+        "dnsenum": f"dnsenum --noreverse {q(domain)}",
+        "dnsrecon": f"dnsrecon -d {q(domain)}",
+        "fierce": f"fierce --domain {q(domain)}"
     }
     return run_cmd(cmds.get(tool, cmds["dnsenum"]), timeout=120)
 
 def whois_lookup(target):
     """WHOIS lookup"""
-    return run_cmd(f"whois {target}", timeout=30)
+    return run_cmd(f"whois {q(target)}", timeout=30)
 
 def theharvester(domain, source="all"):
     """theHarvester — email/subdomain/IP harvesting"""
-    return run_cmd(f"theHarvester -d {domain} -b {source} -l 200", timeout=120)
+    return run_cmd(f"theHarvester -d {q(domain)} -b {q(source)} -l 200", timeout=120)
 
 # ═══ WEB APPLICATION ═══
 
 def nikto_scan(target):
     """Nikto web vulnerability scanner"""
-    return run_cmd(f"nikto -h {target} -C all -maxtime 120s", timeout=180)
+    return run_cmd(f"nikto -h {q(target)} -C all -maxtime 120s", timeout=180)
 
 def dirb_scan(url, wordlist="/usr/share/wordlists/dirb/common.txt"):
     """DIRB directory brute-force"""
-    return run_cmd(f"dirb {url} {wordlist} -r -z 10", timeout=180)
+    return run_cmd(f"dirb {q(url)} {q(wordlist)} -r -z 10", timeout=180)
 
 def gobuster_scan(url, wordlist="/usr/share/wordlists/dirb/common.txt", mode="dir"):
     """Gobuster directory/DNS/vhost enumeration"""
-    return run_cmd(f"gobuster {mode} -u {url} -w {wordlist} -t 50 --no-error", timeout=180)
+    return run_cmd(f"gobuster {q(mode)} -u {q(url)} -w {q(wordlist)} -t 50 --no-error", timeout=180)
 
 def sqlmap_scan(url, data=None, level=1):
     """SQLMap SQL injection scanner"""
-    cmd = f"sqlmap -u '{url}' --batch --level={level} --risk=1 --threads=5"
-    if data: cmd += f" --data='{data}'"
+    cmd = f"sqlmap -u {q(url)} --batch --level={q(str(level))} --risk=1 --threads=5"
+    if data: cmd += f" --data={q(data)}"
     return run_cmd(cmd, timeout=180)
 
 def whatweb_scan(url):
     """WhatWeb technology fingerprinting"""
-    return run_cmd(f"whatweb -a 3 {url}", timeout=60)
+    return run_cmd(f"whatweb -a 3 {q(url)}", timeout=60)
 
 def wfuzz_scan(url, wordlist="/usr/share/wordlists/dirb/common.txt", keyword="FUZZ"):
     """Wfuzz web fuzzer"""
-    return run_cmd(f"wfuzz -c -z file,{wordlist} --hc 404 {url}", timeout=120)
+    return run_cmd(f"wfuzz -c -z file,{q(wordlist)} --hc 404 {q(url)}", timeout=120)
 
 # ═══ EXPLOITATION ═══
 
 def searchsploit(query):
     """SearchSploit — search Exploit-DB"""
-    result = run_cmd(f"searchsploit --json '{query}'", timeout=30)
+    result = run_cmd(f"searchsploit --json {q(query)}", timeout=30)
     try:
         data = json.loads(result.get("stdout", "{}"))
         result["exploits"] = data.get("RESULTS_EXPLOIT", [])[:20]
@@ -145,43 +146,43 @@ def searchsploit(query):
 def hydra_attack(target, service, userlist=None, passlist=None, user=None, password=None):
     """Hydra brute-force attack"""
     cmd = f"hydra -t 4 -w 5"
-    if user: cmd += f" -l {user}"
-    elif userlist: cmd += f" -L {userlist}"
-    if password: cmd += f" -p {password}"
-    elif passlist: cmd += f" -P {passlist}"
+    if user: cmd += f" -l {q(user)}"
+    elif userlist: cmd += f" -L {q(userlist)}"
+    if password: cmd += f" -p {q(password)}"
+    elif passlist: cmd += f" -P {q(passlist)}"
     else: cmd += f" -P /usr/share/wordlists/rockyou.txt"
-    cmd += f" {target} {service}"
+    cmd += f" {q(target)} {q(service)}"
     return run_cmd(cmd, timeout=300)
 
 def msf_search(query):
     """Metasploit module search"""
-    return run_cmd(f"msfconsole -q -x 'search {query}; exit'", timeout=60)
+    return run_cmd(f"msfconsole -q -x {q(f'search {query}; exit')}", timeout=60)
 
 # ═══ PASSWORD CRACKING ═══
 
 def john_crack(hashfile, wordlist="/usr/share/wordlists/rockyou.txt", format=None):
     """John the Ripper"""
-    cmd = f"john --wordlist={wordlist}"
-    if format: cmd += f" --format={format}"
-    cmd += f" {hashfile}"
+    cmd = f"john --wordlist={q(wordlist)}"
+    if format: cmd += f" --format={q(format)}"
+    cmd += f" {q(hashfile)}"
     return run_cmd(cmd, timeout=300)
 
 def hashid(hash_value):
     """Hash identification"""
-    result = run_cmd(f"hash-identifier <<< '{hash_value}'", timeout=10)
+    result = run_cmd(f"hash-identifier <<< {q(hash_value)}", timeout=10)
     if result.get("return_code") != 0:
-        result = run_cmd(f"hashid '{hash_value}'", timeout=10)
+        result = run_cmd(f"hashid {q(hash_value)}", timeout=10)
     return result
 
 # ═══ OSINT ═══
 
 def subfinder_scan(domain):
     """Subfinder subdomain discovery"""
-    return run_cmd(f"subfinder -d {domain} -silent", timeout=90)
+    return run_cmd(f"subfinder -d {q(domain)} -silent", timeout=90)
 
 def amass_enum(domain):
     """Amass subdomain enumeration"""
-    return run_cmd(f"amass enum -passive -d {domain}", timeout=180)
+    return run_cmd(f"amass enum -passive -d {q(domain)}", timeout=180)
 
 # ═══ POST-EXPLOITATION ═══
 
@@ -215,9 +216,9 @@ def enumerate_system():
 
 def ssh_connect(host, user, password=None, key=None, port=22):
     """Initiate SSH connection info (for agent to use)"""
-    cmd_parts = [f"ssh -o StrictHostKeyChecking=no -p {port}"]
-    if key: cmd_parts.append(f"-i {key}")
-    cmd_parts.append(f"{user}@{host}")
+    cmd_parts = [f"ssh -o StrictHostKeyChecking=no -p {q(str(port))}"]
+    if key: cmd_parts.append(f"-i {q(key)}")
+    cmd_parts.append(q(f"{user}@{host}"))
     
     session_id = f"ssh_{host}_{user}_{datetime.now().strftime('%H%M%S')}"
     SESSIONS[session_id] = {
@@ -229,7 +230,7 @@ def ssh_connect(host, user, password=None, key=None, port=22):
     return {
         "session_id": session_id,
         "ssh_command": " ".join(cmd_parts),
-        "sshpass_command": f"sshpass -p '{password}' {' '.join(cmd_parts)}" if password else None,
+        "sshpass_command": f"sshpass -p {q(password)} {' '.join(cmd_parts)}" if password else None,
         "status": "ready",
         "note": "Use ssh_exec to run commands on this session"
     }
@@ -240,7 +241,7 @@ def ssh_exec(session_id, command):
     if not session:
         return {"error": f"Session {session_id} not found"}
     
-    full_cmd = f"{session['command']} '{command}'"
+    full_cmd = f"{session['command']} {q(command)}"
     return run_cmd(full_cmd, timeout=60)
 
 def reverse_shell_listener(port=4444, shell_type="bash"):
@@ -294,7 +295,7 @@ def file_download(url, output=None):
     """Download file from URL"""
     if not output:
         output = f"{RESULTS_DIR}/{os.path.basename(url)}"
-    return run_cmd(f"curl -sL -o {output} '{url}' && ls -la {output}", timeout=60)
+    return run_cmd(f"curl -sL -o {q(output)} {q(url)} && ls -la {q(output)}", timeout=60)
 
 # ═══ REPORTING ═══
 
