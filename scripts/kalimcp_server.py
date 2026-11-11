@@ -1,25 +1,25 @@
 #!/usr/bin/env python3
 """
-KaliMCP — Kali Linux Pentesting MCP Server
+KaliMCP: Kali Linux Pentesting MCP Server
 Programmatic access to 25+ security tools via Model Context Protocol.
 
 Categories:
-  🔍 Reconnaissance    — nmap, masscan, dnsenum, whois, theHarvester
-  🌐 Web Application   — nikto, dirb, sqlmap, wfuzz, whatweb
-  🔐 Exploitation      — msfconsole, searchsploit, hydra
-  📡 Wireless           — aircrack-ng, reaver
-  🔑 Password           — john, hashcat, hash-identifier
-  🕵️ OSINT              — sherlock, amass, subfinder
-  🛡️ Post-Exploitation — linpeas, winpeas, pspy
-  📋 Reporting          — structured JSON/HTML report generation
-  🐚 Shell Management   — SSH sessions, reverse shell listeners
-  📁 File Operations    — upload, download, exfil staging
+  Reconnaissance: nmap, masscan, dnsenum, whois, theHarvester
+  Web Application: nikto, dirb, sqlmap, wfuzz, whatweb
+  Exploitation: msfconsole, searchsploit, hydra
+  Wireless: aircrack-ng, reaver
+  Password: john, hashcat, hash-identifier
+  OSINT: sherlock, amass, subfinder
+  Post-Exploitation: linpeas, winpeas, pspy
+  Reporting: structured JSON/HTML report generation
+  Shell Management: SSH sessions, reverse shell listeners
+  File Operations: upload, download, exfil staging
 
 Usage:
   python3 kalimcp_server.py [--port 7070] [--docker-mode]
 
-Author: Ali AlEnezi (@SiteQ8) — NBK Group
-License: MIT — For authorized security testing only
+Author: Ali AlEnezi (@SiteQ8)
+License: MIT - For authorized security testing only
 """
 
 import json, os, socket, subprocess, sys, threading, shutil, tempfile
@@ -81,7 +81,7 @@ def nmap_scan(target, scan_type="default", ports=None, scripts=None):
     return result
 
 def masscan_scan(target, ports="1-65535", rate=1000):
-    """Masscan — fast port scanning"""
+    """Masscan: fast port scanning"""
     cmd = f"masscan {q(target)} -p{q(str(ports))} --rate={q(str(rate))} --open-only"
     return run_cmd(cmd, timeout=180)
 
@@ -99,7 +99,7 @@ def whois_lookup(target):
     return run_cmd(f"whois {q(target)}", timeout=30)
 
 def theharvester(domain, source="all"):
-    """theHarvester — email/subdomain/IP harvesting"""
+    """theHarvester: email/subdomain/IP harvesting"""
     return run_cmd(f"theHarvester -d {q(domain)} -b {q(source)} -l 200", timeout=120)
 
 # ═══ WEB APPLICATION ═══
@@ -133,7 +133,7 @@ def wfuzz_scan(url, wordlist="/usr/share/wordlists/dirb/common.txt", keyword="FU
 # ═══ EXPLOITATION ═══
 
 def searchsploit(query):
-    """SearchSploit — search Exploit-DB"""
+    """SearchSploit: search Exploit-DB"""
     result = run_cmd(f"searchsploit --json {q(query)}", timeout=30)
     try:
         data = json.loads(result.get("stdout", "{}"))
