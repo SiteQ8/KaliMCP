@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🐉 KaliMCP
+# KaliMCP
 
 ### Automate Kali Linux Pentesting with MCP
 
@@ -20,7 +20,7 @@ Perfect for CTFs, security research, and automated reporting.
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 ```bash
 git clone https://github.com/SiteQ8/KaliMCP.git
@@ -46,9 +46,9 @@ curl -X POST http://localhost:7070 \
 
 ---
 
-## 🔧 27 Tools in 8 Categories
+## 27 Tools in 8 Categories
 
-### 🔍 Reconnaissance (5)
+### Reconnaissance (5)
 | Tool | Description |
 |------|-------------|
 | `nmap_scan` | 8 scan profiles: quick, default, full, udp, stealth, vuln, os, aggressive |
@@ -57,7 +57,7 @@ curl -X POST http://localhost:7070 \
 | `whois_lookup` | WHOIS domain/IP lookup |
 | `theharvester` | Email, subdomain, IP harvesting from OSINT sources |
 
-### 🌐 Web Application (6)
+### Web Application (6)
 | Tool | Description |
 |------|-------------|
 | `nikto_scan` | Web vulnerability scanner (6700+ tests) |
@@ -67,32 +67,32 @@ curl -X POST http://localhost:7070 \
 | `whatweb_scan` | Technology fingerprinting |
 | `wfuzz_scan` | Web application fuzzer |
 
-### 🔐 Exploitation (3)
+### Exploitation (3)
 | Tool | Description |
 |------|-------------|
 | `searchsploit` | Search Exploit-DB (JSON output with exploit details) |
 | `hydra_attack` | Network brute-force (SSH, FTP, HTTP, SMB, RDP, MySQL) |
 | `msf_search` | Metasploit module search |
 
-### 🔑 Password (2)
+### Password (2)
 | Tool | Description |
 |------|-------------|
 | `john_crack` | John the Ripper with wordlist + format support |
 | `hashid` | Hash type identification |
 
-### 🕵️ OSINT (2)
+### OSINT (2)
 | Tool | Description |
 |------|-------------|
 | `subfinder_scan` | Fast passive subdomain discovery |
 | `amass_enum` | Comprehensive DNS intelligence |
 
-### 🛡️ Post-Exploitation (2)
+### Post-Exploitation (2)
 | Tool | Description |
 |------|-------------|
 | `enumerate_system` | Local privesc recon (users, SUID, cron, kernel, network) |
 | `linpeas` | Download latest LinPEAS scanner |
 
-### 🐚 Shell Management (4)
+### Shell Management (4)
 | Tool | Description |
 |------|-------------|
 | `ssh_connect` | SSH session with password/key auth |
@@ -100,7 +100,7 @@ curl -X POST http://localhost:7070 \
 | `reverse_shell_listener` | 6 payload types (bash, python, nc, php, powershell, perl) + listener |
 | `list_sessions` | List active sessions |
 
-### 📁 Files + 📋 Reporting (4)
+### Files + Reporting (4)
 | Tool | Description |
 |------|-------------|
 | `file_upload` | Stage file with transfer methods (HTTP, nc, base64, scp) |
@@ -110,7 +110,7 @@ curl -X POST http://localhost:7070 \
 
 ---
 
-## 🐳 Docker Test Mode
+## Docker Test Mode
 
 Safe practice environments:
 
@@ -130,7 +130,7 @@ docker run -d -p 8083:8080 --name webgoat webgoat/webgoat
 
 ---
 
-## 📋 Pentest Workflow
+## Pentest Workflow
 
 ```
 1. RECON     → nmap_scan → dns_enum → whois_lookup → theharvester
@@ -143,13 +143,13 @@ docker run -d -p 8083:8080 --name webgoat webgoat/webgoat
 
 ---
 
-## ⚠️ Legal Disclaimer
+## Legal Disclaimer
 
 This tool is for **authorized security testing only**. Always obtain written permission before testing any system you do not own. Unauthorized access to computer systems is illegal.
 
 ---
 
-## 👤 Author
+## Author
 
 **Ali AlEnezi** · [@SiteQ8](https://github.com/SiteQ8) · [3li.info](https://3li.info)
 
